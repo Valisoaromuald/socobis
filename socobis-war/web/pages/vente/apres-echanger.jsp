@@ -38,6 +38,11 @@ Connection connection = null;
     int nbLine = Integer.parseInt(request.getParameter("nbLine"));
 
     VenteLib vl = (VenteLib) session.getAttribute("vente");
+
+    if (vl.getEtat() != ConstanteEtatPaie.getEtatValiderParDG()) {
+        throw new Exception("Mila valider ilay vente");
+    }
+
     VenteDetailsLib vdl = (VenteDetailsLib) session.getAttribute("vente-detail");
 
     ClassMAPTable mere = (ClassMAPTable) vl;
@@ -66,28 +71,47 @@ Connection connection = null;
     System.out.println(estchangeable);
 
     if (estchangeable == 0) {
-        throw new Exception("Le produit n'est pas changeable");
+        throw new Exception("Le produit est inchangeable");
     } else if (estchangeable == 1) {
+
         if (montantFactureVaovao < montantTotalFacture) {
-            throw new Exception("le montant à payer pour la nouvelle facture doit etre superieur au montant paye pour l'ancienne facture");
+            throw new Exception("le montant paye ne peut pas etre retourner l'argent ");
+        } 
+        
+    } else {
+
+        if (montantFactureVaovao - montantTotalFacture < 0) {
+
+            System.out.println("ici");
+            System.out.println("insertion " + montantProduitTaloha);
+            MvtCaisse mvtCaisse = new MvtCaisse();
+
+
+                mvtCaisse.setNomTable("MOUVEMENTCAISSE");
+
+            mvtCaisse.setDesignation("Debit  à retourner ");
+            mvtCaisse.setIdCaisse("CAI000238");
+            mvtCaisse.setIdTiers(vl.getIdClient());
+            mvtCaisse.setDaty(Date.valueOf(LocalDate.now()));
+            mvtCaisse.setDebit(montantProduitTaloha);de 
+            mvtCaisse.setCredit(0);
+            mvtCaisse.setEtat(ConstanteEtatPaie.getEtatValiderlParDG());
+
+            mvtCaisse.createObject(userId, connection);
         }
     }
 
     // Fafana leh izi raha oe leh qte alana mitovy amleh qte anleh produit asorina
     vdl.setNomTable("VENTE_DETAILS");
-    if (qte > vdl.getQte()) {
-        throw new Exception("Otran mihoatra ny teo aloha kosa leh quantite ah");
-    } 
-    // else if (qte == vdl.getQte()) {
-    //     System.out.println("Oay hofafako ity zavatra ity");
-    //     vdl.deleteToTable(connection);
-    // }
-    else {
+
+     if (qte > vdl.getQte()) {
+            throw new Exception("quantite demande est superieure à la quantite  retournée");
+    } else {
         System.out.println("Updateko ato ito zany");
         vdl.setQte(vdl.getQte() - qte);
         vdl.updateToTable(connection);
     }
-
+    
     // Insertion anaty stock
     MvtStock mvtStockMere = new MvtStock();
     mvtStockMere.setNomTable("MVTSTOCK");
@@ -124,7 +148,7 @@ Connection connection = null;
 
         mvtCaisse.setNomTable("MOUVEMENTCAISSE");
 
-            mvtCaisse.setDesignation("BABABABABABA -- CAACAACCA");
+            mvtCaisse.setDesignation("Payement anleh zavatra");
             mvtCaisse.setIdCaisse("CAI000238");
             mvtCaisse.setIdTiers(vl.getIdClient());
             mvtCaisse.setDaty(Date.valueOf(LocalDate.now()));
@@ -178,4 +202,3 @@ Connection connection = null;
     }
   }
 %>
-

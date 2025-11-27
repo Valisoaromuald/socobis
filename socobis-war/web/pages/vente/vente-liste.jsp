@@ -38,8 +38,6 @@
 
 
 
-
-
     if (request.getParameter("devise") != null && request.getParameter("devise").compareToIgnoreCase("") != 0) {
         bc.setNomTable(request.getParameter("devise"));
     } else {

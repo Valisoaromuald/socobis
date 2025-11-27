@@ -24,7 +24,7 @@
         venteDetails.setNomTable("VENTE_DETAILS_POIDS");
         VenteLib vl = null;
 
-        Object[] resultVenteDetails = CGenUtil.rechercher(venteDetails, "SELECT * FROM VENTE_DETAILS_POIDS WHERE id like '" + idProduit + "'");
+        Object[] resultVenteDetails = CGenUtil.rechercher(venteDetails, "SELECT * FROM "+ venteDetails.getNomTable() +" WHERE id like '" + idProduit + "'");
         Object[] resultVentes = CGenUtil.rechercher((VenteLib) new VenteLib(), "SELECT * FROM VENTE_CPL WHERE id like '" + idVente + "'");
 
         if (resultVenteDetails.length > 0) {

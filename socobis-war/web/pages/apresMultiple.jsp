@@ -204,7 +204,7 @@
             Page p = new Page(t, request, nombreLigne, tId);
             ClassMAPTable[] f = p.getObjectAvecValeurTableauUpdate();
             u.updateObjectMultiple(f);
-%>
+    %>
         <script language="JavaScript"> document.location.replace("<%=lien%>?but=<%=bute%>");</script>
         <%}
 
