@@ -1,0 +1,21 @@
+[x] Detail Facture
+    [x] Boutoun Echanger
+
+[ ] Echanger
+    [ ] Affichage`
+        [ ] Session
+            - Facture Taloha
+            - Produit fini echangena
+        [ ] Formulaire : 
+            - Isan'leh produit asorina
+            - Solon'ilay produit hanovana azy
+                - isany, ilay produit
+            - bouton valider
+        [ ] Action
+            [ ] Check montant
+            [ ] ampina produit ilay facture teo aloha dia reste livre atao isanleh produit amzay amniny no manao livraison
+            [ ] Si changer seulement
+                [ ] Generer mouvement stock
+            - Et si changer avec payment
+                [ ] Payement
+                - Generer mouvement stock
