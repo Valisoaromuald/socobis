@@ -23,6 +23,7 @@ import encaissement.EncaissementDetails;
 import faturefournisseur.FactureFournisseurCpl;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import magasin.Magasin;
 import mg.cnaps.compta.ComptaEcriture;
@@ -67,6 +70,7 @@ public class Vente extends FactureCF {
     int modelivraison;
     String referencefact;
     String numerofacture;
+    String planpaiement;
 
     public String getNumerofacture() {
         return numerofacture;
@@ -160,17 +164,66 @@ public class Vente extends FactureCF {
     }
 
     public Prevision genererPrevision(String u, Connection c) throws Exception{
-        Prevision mere = new Prevision();
-        Vente venteComplet = this.getVenteWithMontant(c);
-        mere.setDaty(datyPrevu);
-        mere.setCredit(venteComplet.getMontantttcAr());
-        mere.setIdFacture(this.id);
-        mere.setIdCaisse(ConstanteStation.idCaisse);
-        mere.setIdDevise("AR");
-        mere.setDesignation("Prevision rattachée au vente N : "+this.getId());
-        mere.setIdTiers(this.getIdClient());
-        return ( Prevision ) mere.createObject(u, c);
+        System.out.println(planpaiement);
+        if (planpaiement == null) {
+             Prevision mere = new Prevision();
+            Vente venteComplet = this.getVenteWithMontant(c);
+            mere.setDaty(datyPrevu);
+            mere.setCredit(venteComplet.getMontantttcAr());
+            mere.setIdFacture(this.id);
+            mere.setIdCaisse(ConstanteStation.idCaisse);
+            mere.setIdDevise("AR");
+            mere.setDesignation("Prevision rattachée au vente N : "+this.getId());
+            mere.setIdTiers(this.getIdClient());
+            return ( Prevision ) mere.createObject(u, c);
+        }
+
+        String[] spltsAnlehDaty = planpaiement.split(";");
+
+        if (spltsAnlehDaty.length == 0) {
+            throw new Exception("Jereo tsara aloha fa misy zavatra tsy mety leh Syntaxe");
+        }
+
+        Prevision[] previsions = new Prevision[spltsAnlehDaty.length];
+        int length = spltsAnlehDaty.length;
+
+        for (int a = 0; a < spltsAnlehDaty.length; a++) {
+            previsions[a] = previsionByDateStr(spltsAnlehDaty[a], u, c, a, length);
+        }
+
+        return previsions[0];
     }
+
+            private double enPourcentage(double valeur, double pourcetage) {
+                return valeur * pourcetage / 100;
+            }
+
+        public Prevision previsionByDateStr(String prv, String u, Connection c, int indice, int length) throws Exception {
+
+            System.out.println(prv);
+            Prevision mere = new Prevision();
+            Vente venteComplet = this.getVenteWithMontant(c);
+
+            // String[] splt = prv.split(":");
+
+            String[] date = prv.split("\\/");
+
+            Date dateOh = Date.valueOf(LocalDate.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])));
+
+            double montant = venteComplet.getMontantttcAr() / length;
+
+            mere.setDaty(dateOh);
+            mere.setCredit(montant);
+            mere.setIdFacture(this.id);
+            mere.setIdCaisse(ConstanteStation.idCaisse);
+            mere.setIdDevise("AR");
+            mere.setDesignation("Prevision " + indice +  " rattachée  au vente N : "+this.getId());
+            mere.setIdTiers(this.getIdClient());
+
+            mere = ( Prevision ) mere.createObject(u, c);
+            mere.validerObject(u, c);
+            return mere;
+        }
     
     public Vente getVenteWithMontant(Connection c) throws Exception{
         return (Vente)new Vente().getById(this.getId(), "VENTE_CPL", c);
@@ -602,7 +655,8 @@ protected EncaissementDetails [] generateDetailsEncaissements (Connection c ) th
             }
             genererEcriture(u, c);
             //createMvtStockSortie(u, c);
-            if(this.getEstPrevu() == 0||this.getDatyPrevu()!=null){
+            if(this.getEstPrevu() == 1 && this.getDatyPrevu()!=null){
+                
                 genererPrevision(u, c);
             }
 
@@ -1098,6 +1152,14 @@ protected EncaissementDetails [] generateDetailsEncaissements (Connection c ) th
             }
         }
         return mvt;
+    }
+
+    public String getPlanpaiement() {
+        return planpaiement;
+    }
+
+    public void setPlanpaiement(String planpaiement) {
+        this.planpaiement = planpaiement;
     }
 
         

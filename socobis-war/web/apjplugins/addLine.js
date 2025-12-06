@@ -43,6 +43,7 @@ function initAutocomplete(num, champData) {
                 const valeur = valeursRetour[i] || '';
                 $(idChamp).val(valeur);
             }
+
             autocompleteTriggered = false;
             return false;
         }

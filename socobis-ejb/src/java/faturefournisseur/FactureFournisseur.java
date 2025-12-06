@@ -432,7 +432,7 @@ public class FactureFournisseur extends vente.FactureCF{
     public Object validerObject(String u, Connection c) throws Exception {
         super.validerObject(u, c);
         genererEcriture(u, c);
-        if(estPrevu == 0&&this.getDatyPrevu()!=null){
+        if(estPrevu == 1 && this.getDatyPrevu()!=null){
             genererPrevision(u, c);
         }
         FactureFournisseurDetails[] ffD=(FactureFournisseurDetails[]) this.getFille(null,c,"");

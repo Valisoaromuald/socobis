@@ -10,6 +10,7 @@ import bean.CGenUtil;
 import bean.ClassEtat;
 import bean.ClassMAPTable;
 import bean.UnionIntraTable;
+import change.TauxDeChange;
 import client.Client;
 import constante.ConstanteEtat;
 
@@ -23,6 +24,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import mg.cnaps.compta.ComptaEcriture;
 import mg.cnaps.compta.ComptaSousEcriture;
@@ -255,6 +258,16 @@ public class MvtCaisse extends ClassEtat{
         return super.createObject(u, c);
     }
 
+        public double zeroIfNegative(double montant) {
+            if (montant < 0) {
+                return 0;
+            }
+            return montant;
+        }
+
+
+    // DANGER
+
     public MvtCaisse validerSimple(String u, Connection c) throws Exception {
         try {
             c = new UtilDB().GetConn();
@@ -313,10 +326,55 @@ public class MvtCaisse extends ClassEtat{
             }
             caisse.setEtat(ConstanteEtat.getEtatProforma());
             caisse.updateToTableWithHisto(u, c);
+
+            String idPrevision = caisse.getIdPrevision();
+
+            // DANGER Teto leh nampiana
+
+            System.out.println(idPrevision);
+            if (idPrevision != null) {
+                Prevision prevision = new Prevision();
+                prevision = (Prevision) prevision.getById(idPrevision, prevision.getNomTable(), c);
+                System.out.println(prevision);
+
+                System.out.println(prevision.getDaty() + "  " + caisse.getDaty() + " " + caisse.getDaty().compareTo(prevision.getDaty()));
+
+                if (caisse.getDaty().compareTo(prevision.getDaty()) <= 0) {
+
+                    // vola en ariary avy any amn caisse
+                    double montantCaisseCredit = caisse.getCredit() * caisse.getTaux();
+                    double montantCaisseDebit = caisse.getDebit() * caisse.getTaux();
+
+                    System.out.println(montantCaisseDebit + " : debit," + montantCaisseCredit + " : credit");
+                    
+                    // vola en devise himodifiena anleh prevision
+                    double anasoranaPrevisionCredit = montantCaisseCredit / prevision.getTaux();
+                    double anasoranaPrevisionDebit = montantCaisseDebit / prevision.getTaux();
+
+                    System.out.println(anasoranaPrevisionCredit + " anasorana credit , " + anasoranaPrevisionDebit + " anasorana debit");
+
+                    System.out.println("Ny debit tao taloha : " + prevision.getDebit());
+                    System.out.println("Credit taloha : " + prevision.getCredit());
+                    
+                    double solonaDebit = zeroIfNegative(prevision.getDebit() - anasoranaPrevisionDebit);
+                    double solonaCredit = zeroIfNegative(prevision.getCredit() - anasoranaPrevisionCredit);
+
+                    System.out.println("debit vaovao Ary eh " + solonaDebit);
+
+                    System.out.println("credit vaovao koa eh " + solonaCredit);
+
+                    prevision.setDebit(solonaDebit);
+                    prevision.setCredit(solonaCredit);
+
+                    prevision.updateToTable(c);
+                }
+            }
+
             return caisse;
         } finally {
             if (c != null) {
                 try {
+                    c.rollback();
                     c.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -346,6 +404,7 @@ public class MvtCaisse extends ClassEtat{
             report.validerObject(u,c);
         }
         MvtCaisse mvt = (MvtCaisse)super.createObject(u, c);
+
         //(u, c);
         return mvt;
     }

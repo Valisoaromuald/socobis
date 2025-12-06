@@ -18,11 +18,11 @@ for (let a = 0; a < rows.length; a++) {
     } else {
         childNode = document.createElement("td");
         childElement = `
-            <a class="btn btn-warning btn-success pull-right" href="?but=vente/echanger.jsp&idvente=${idVente}&idproduit=${rows[a].children[0].innerText}&payement=0">
-                Remplacer
+            <a class="btn btn-primary pull-right" href="?but=vente/echanger.jsp&idvente=${idVente}&idproduit=${rows[a].children[0].innerText}&payement=0">
+                Echanger
             </a>
-            <a class="btn btn-success pull-right" href="?but=vente/echanger.jsp&idvente=${idVente}&idproduit=${rows[a].children[0].innerText}&payement=1">
-                Remplacer et payer
+            <a class="btn btn-primary pull-right" href="?but=vente/echanger.jsp&idvente=${idVente}&idproduit=${rows[a].children[0].innerText}&payement=1">
+                Echanger Et Payer
             </a>
         `
     }

@@ -37,11 +37,11 @@
             System.err.println(v);
         }
 
-        affichage.Champ[] liste = new affichage.Champ[1];
-//	liste[0] = new Liste("idDevise",new caisse.Devise(),"val","id");
-        Caisse c = new Caisse();
+        affichage.Champ[] liste = new affichage.Champ[2];
+	    liste[0] = new Liste("idDevise",new caisse.Devise(),"val","id");
+        // Caisse c = new Caisse();
        // liste[0] = new Liste("idCaisse",c,"val","id");
-        liste[0] = new Liste("idModePaiement",new TypeObjet("MODEPAIEMENT"),"val","id");
+        liste[1] = new Liste("idModePaiement",new TypeObjet("MODEPAIEMENT"),"val","id");
 			
         pageInsert.getFormu().changerEnChamp(liste);
         pageInsert.getFormu().getChamp("designation").setDefaut("Paiement de la facture : "+idOrigine);
@@ -49,7 +49,7 @@
         pageInsert.getFormu().getChamp("idDevise").setLibelle("Devise");
         pageInsert.getFormu().getChamp("daty").setLibelle("Date");
         pageInsert.getFormu().getChamp("idDevise").setDefaut(devise);
-        pageInsert.getFormu().getChamp("idDevise").setAutre("readonly");
+        // pageInsert.getFormu().getChamp("idDevise").setAutre("readonly");
         pageInsert.getFormu().getChamp("taux").setDefaut(tau);
         pageInsert.getFormu().getChamp("idVirement").setVisible(false);
         pageInsert.getFormu().getChamp("idVenteDetail").setVisible(false);

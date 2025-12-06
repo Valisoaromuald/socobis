@@ -61,12 +61,10 @@ public class TauxDeChange extends ClassMAPTable {
     }
     @Override
     public String getAttributIDName() {
-        // TODO Auto-generated method stub
         return "id";
     }
     @Override
     public String getTuppleID() {
-        // TODO Auto-generated method stub
         return this.id;
     }
 

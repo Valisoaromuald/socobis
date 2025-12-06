@@ -21,11 +21,11 @@
         String tiers=request.getParameter("tiers");
         String prev=request.getParameter("idPrevision");
 
-        affichage.Champ[] liste = new affichage.Champ[1];
-//				liste[0] = new Liste("idDevise",new caisse.Devise(),"val","id");
+        affichage.Champ[] liste = new affichage.Champ[2];
+				liste[0] = new Liste("idDevise",new caisse.Devise(),"val","id");
 				Caisse c = new Caisse();
 				//c.setIdPoint(ConstanteStation.getFichierCentre());
-				liste[0] = new Liste("idCaisse",c,"val","id");
+				liste[1] = new Liste("idCaisse",c,"val","id");
 			
         pageInsert.getFormu().changerEnChamp(liste);
 				pageInsert.getFormu().getChamp("designation").setDefaut("Paiement de la facture : "+idOrigine);
@@ -36,7 +36,7 @@
         pageInsert.getFormu().getChamp("daty").setLibelle("Date");
         pageInsert.getFormu().getChamp("idtiers").setLibelle("Fournisseur");
         pageInsert.getFormu().getChamp("idDevise").setDefaut(devise);
-        pageInsert.getFormu().getChamp("idDevise").setAutre("readonly");
+        // pageInsert.getFormu().getChamp("idDevise").setAutre("readonly");
         pageInsert.getFormu().getChamp("taux").setDefaut("1");
         pageInsert.getFormu().getChamp("idVirement").setVisible(false);
         pageInsert.getFormu().getChamp("idVenteDetail").setVisible(false);

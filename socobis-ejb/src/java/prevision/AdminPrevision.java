@@ -98,6 +98,8 @@ public class AdminPrevision {
                 listePrev[i].calculerSoldeFinale();
                 if(minimum.getSoldeFinale()>listePrev[i].getSoldeFinale()) this.setMinimum(listePrev[i]);
             }
+
+            System.out.println(requette);
         } catch (Exception e) {
             throw e;
         } finally {

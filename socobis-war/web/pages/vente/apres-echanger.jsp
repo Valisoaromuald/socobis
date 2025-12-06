@@ -71,31 +71,29 @@ Connection connection = null;
     System.out.println(estchangeable);
 
     if (estchangeable == 0) {
-        throw new Exception("Le produit est inchangeable");
+        throw new Exception("Le produit ne peut pas etre modifier");
     } else if (estchangeable == 1) {
-
         if (montantFactureVaovao < montantTotalFacture) {
-            throw new Exception("le montant paye ne peut pas etre retourner l'argent ");
+            throw new Exception("Tsy mamerimbola tompoko");
         } 
-        
     } else {
 
         if (montantFactureVaovao - montantTotalFacture < 0) {
 
-            System.out.println("ici");
-            System.out.println("insertion " + montantProduitTaloha);
+            System.out.println("ato eh");
+            System.out.println("insereko " + montantProduitTaloha);
             MvtCaisse mvtCaisse = new MvtCaisse();
 
 
-                mvtCaisse.setNomTable("MOUVEMENTCAISSE");
+            mvtCaisse.setNomTable("MOUVEMENTCAISSE");
 
-            mvtCaisse.setDesignation("Debit  à retourner ");
+            mvtCaisse.setDesignation("Debit raha oe miverina");
             mvtCaisse.setIdCaisse("CAI000238");
             mvtCaisse.setIdTiers(vl.getIdClient());
             mvtCaisse.setDaty(Date.valueOf(LocalDate.now()));
-            mvtCaisse.setDebit(montantProduitTaloha);de 
+            mvtCaisse.setDebit(montantProduitTaloha);
             mvtCaisse.setCredit(0);
-            mvtCaisse.setEtat(ConstanteEtatPaie.getEtatValiderlParDG());
+            mvtCaisse.setEtat(ConstanteEtatPaie.getEtatValiderParDG());
 
             mvtCaisse.createObject(userId, connection);
         }
@@ -105,7 +103,7 @@ Connection connection = null;
     vdl.setNomTable("VENTE_DETAILS");
 
      if (qte > vdl.getQte()) {
-            throw new Exception("quantite demande est superieure à la quantite  retournée");
+            throw new Exception("Otran mihoatra ny teo aloha kosa leh quantite ah");
     } else {
         System.out.println("Updateko ato ito zany");
         vdl.setQte(vdl.getQte() - qte);
@@ -202,3 +200,4 @@ Connection connection = null;
     }
   }
 %>
+

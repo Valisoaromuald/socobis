@@ -25,6 +25,7 @@ public abstract class FactureCF extends  ClassMere{
     java.sql.Date daty;
     java.sql.Date datyPrevu;
     protected double montantttc, montanttva, montantht,montantttcAr;
+    
     @Override
     public String getLiaisonFille() {
         return "idVente";

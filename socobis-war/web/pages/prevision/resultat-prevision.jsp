@@ -27,7 +27,7 @@
 
         String[] colSomme = null;
         String lien = (String) session.getValue("lien");
-        String grouper="semaine";
+        String grouper="jour";
         if(request.getParameter("grouper")!=null) grouper = request.getParameter("grouper");
         String defaultDatyFiltre = request.getParameter("datyFiltre") != null ? request.getParameter("datyFiltre"):Utilitaire.dateDuJour();
         String defaultDatyDebut = request.getParameter("datyDebut") != null ? request.getParameter("datyDebut"):debutFinDefaut[0];
